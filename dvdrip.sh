@@ -16,7 +16,7 @@ boldgreen=${txtbold}$(tput setaf 2)
 
 echo "${boldyellow}Track number (default: 2, check this with HandBrake GUI app):${txtreset} "
 read -e TRACK
-TRACK=$"{TRACK:=2}"
+TRACK=2
 
 echo "${boldyellow}Movie title:${txtreset}"
 read -e MOVIE_TITLE
@@ -24,27 +24,27 @@ read -e MOVIE_TITLE
 echo "${boldyellow}Movie release year:${txtreset}"
 read -e MOVIE_YEAR
 
-echo "${boldyellow}DVD volume path:${txtreset}"
+echo "${boldyellow}DVD volume path (without trailing slash, for example /Volumes/MOVIE):${txtreset}"
 read -e DVD_PATH
 
 echo "${boldyellow}Dump path location without trailing slash:${txtreset} (default: /Users/rolle/Projects/dvdrip/dumpfiles)"
 read -e DUMP_PATH
-DUMP_PATH=$"{DUMP_PATH:=/Users/rolle/Projects/dvdrip/dumpfiles}"
+DUMP_PATH="/Users/rolle/Projects/dvdrip/dumpfiles"
 
 echo "${boldyellow}Output path location without trailing slash:${txtreset} (default: /Users/rolle/Projects/dvdrip/output)"
 read -e OUTPUT_PATH
-OUTPUT_PATH=$"{DUMP_PATH:=/Users/rolle/Projects/dvdrip/output}"
+OUTPUT_PATH="/Users/rolle/Projects/dvdrip/output"
 
 # Variables - comment out previous and uncomment next lines if you prefer the manual way.
 
 #TRACK=2
-#DVD_PATH="/Volumes/MOVIE/"
+#DVD_PATH="/Volumes/MOVIE"
 #DUMP_PATH="/Users/rolle/Projects/dvdrip/dumpfiles/"
 #OUTPUT_PATH="/Users/rolle/Projects/dvdrip/output/"
 #MOVIE_TITLE="Movie title here"
 #MOVIE_YEAR="2015"
 
-echo "${boldgreen}Now, to getting some information about the media in the ISO-file...${txtreset}"
+echo "${boldgreen}Now, to getting some information about the media...${txtreset}"
 mplayer -dvd-device $DVD_PATH dvd://1 -vo null -ao null
 
 echo "${boldgreen}Also getting the length of the titles...${txtreset}"
@@ -53,8 +53,8 @@ mplayer -dvd-device $DVD_PATH dvd://1 -identify -frames 0 -vo null -ao null
 echo "${boldgreen}Finding the track you want to rip and running it through mplayer and generating raw .vob file...${txtreset}"
 mplayer -dvd-device $DVD_PATH dvd://$TRACK -dumpstream -dumpfile $DUMP_PATH/movie.vob
 
-echo "${boldgreen}Copying the IFO file for the track, for the track above that is VTS_0${TRACK}_0.IFO...${txtreset}"
-cp "$DVD_PATH/VIDEO_TS/VTS_0${TRACK}_0.IFO" $DUMP_PATH/
+echo "${boldgreen}Copying the IFO file for the track...${txtreset}"
+cp $DVD_PATH/VIDEO_TS/VTS_0${TRACK}_0.IFO $DUMP_PATH/
 
 echo "${boldgreen}Getting the chapter list...${txtreset}"
 dvdxchap -t $TRACK $DVD_PATH > $DUMP_PATH/chapters.txt
