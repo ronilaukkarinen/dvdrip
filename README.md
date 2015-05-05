@@ -3,6 +3,8 @@
 
 Useful bash script for making mkv files with multiple subtitles and audio tracks out of old school DVD disc. Extremely handy for backing up films to [Plex Home Theater](http://www.plex.tv).
 
+This bash script will output a good quality DVD rip with a size proximately from 1 gigabytes to 3 depending on the length and quality of the original DVD.
+
 Tested with Mac OS X Yosemite (10.10.3).
 
 ### Requirements
