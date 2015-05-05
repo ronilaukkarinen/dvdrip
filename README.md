@@ -1,7 +1,7 @@
 # dvdrip.sh
 ## A killer way to backup a DVD
 
-Useful bash script for making mkv files with multiple subtitles and audio tracks out of old school DVD disc. Extremely important for backing up films to [Plex Home Theater](http://www.plex.tv).
+Useful bash script for making mkv files with multiple subtitles and audio tracks out of old school DVD disc. Extremely handy for backing up films to [Plex Home Theater](http://www.plex.tv).
 
 Tested with Mac OS X Yosemite (10.10.3).
 
