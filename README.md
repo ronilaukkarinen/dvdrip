@@ -5,7 +5,7 @@ Useful bash script for making mkv files with multiple subtitles and audio tracks
 
 This bash script will output a good quality DVD rip with a size proximately from 1 gigabytes to 3 depending on the length and quality of the original DVD.
 
-Tested with Mac OS X Yosemite (10.10.3).
+**This is an experiment and probably doesn't work. Blu-ray command in `rip_commands.sh` is tested working on Linux.** Most probably best to go with [MakeMKV](http://www.makemkv.com/) or [Handbrake](https://handbrake.fr/) GUI to get better information about the process (ripping discs can take a long time).
 
 ### Requirements
 
@@ -16,7 +16,8 @@ Tested with Mac OS X Yosemite (10.10.3).
 - mencoder with xvid support (usually included with mplayer-devel)
 - ogmtools (for dvdxchap)
 - mkvtoolnix (for mkvmerge)
-- transcode (for subtitle2vobsub)
+- transcode
+- subtitleripper (for subtitle2vobsub)
 - tccat (smallshrink for Mac OS X)
 
 #### Mac OS X
