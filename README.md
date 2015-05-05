@@ -1,13 +1,13 @@
 # dvdrip.sh
 ## A killer way to backup a DVD
 
-**This is an experiment and probably doesn't work because of the old and unaccurrate commands. Blu-ray command in `rip_commands.sh` is tested working on Linux.** Most probably best to go with [MakeMKV](http://www.makemkv.com/) or [Handbrake](https://handbrake.fr/) GUI to get better information about the process (ripping discs can take a long time).
+**This is an experiment and probably doesn't work because of the old and unaccurrate commands. Blu-ray command in `rip_commands.sh` is tested working on Linux.** Most probably best to go with [MakeMKV](http://www.makemkv.com/) or [Handbrake](https://handbrake.fr/) GUI to get progressbar (ripping discs can take a long time).
 
-Originally a bash script for making mkv files with multiple subtitles and audio tracks out of old school DVD disc. Extremely handy for backing up films to [Plex Home Theater](http://www.plex.tv).
+dvdrip.sh is originally a bash script for making mkv files with multiple subtitles and audio tracks out of old school DVD disc. Extremely handy for backing up films to [Plex Home Theater](http://www.plex.tv). Also good for learning what is happening during the process.
 
-This bash script will output a good quality DVD rip with a size proximately from 1 gigabytes to 3 depending on the length and quality of the original DVD.
+This bash script will output a lossless quality DVD rip with a size proximately from 1 gigabytes to 4 depending on the length and quality of the original DVD.
 
-[MakeMKV](http://www.makemkv.com/) or [Handbrake](https://handbrake.fr/) does the same and better, but on non-GUI systems and for old-school hackers bash script can be a better choice.
+[MakeMKV](http://www.makemkv.com/) or [Handbrake](https://handbrake.fr/) does the same and better, but on non-GUI systems and for old-school hackers a bash script can be a better choice.
 
 Last [dvdrip.sh](https://raw.githubusercontent.com/ronilaukkarinen/dvdrip/2f67dcb6587dab67eb51e0b38f5f10a5a7f0049c/dvdrip.sh) tested working with OS X Yosemite, but with audio/sub not in sync.
 
