@@ -1,7 +1,7 @@
 # dvdrip.sh
 ## A killer way to backup a DVD
 
-**This is an experiment and probably doesn't work because of the old and unaccurrate commands. Blu-ray command in `rip_commands.sh` is tested working on Linux.** Most probably best to go with [MakeMKV](http://www.makemkv.com/) or [Handbrake](https://handbrake.fr/) GUI to get progressbar (ripping discs can take a long time).
+**This is an experiment and probably doesn't work because of the old and inaccurrate commands. Blu-ray command in `rip_commands.sh` is tested working on Linux.** Most probably best to go with [MakeMKV](http://www.makemkv.com/) or [Handbrake](https://handbrake.fr/) GUI to get progressbar (ripping discs can take a long time).
 
 dvdrip.sh is originally a bash script for making mkv files with multiple subtitles and audio tracks out of old school DVD disc. Extremely handy for backing up films to [Plex Home Theater](http://www.plex.tv). Also good for learning what is happening during the process.
 
