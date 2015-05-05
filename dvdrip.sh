@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # dvdrip - A killer way to backup a DVD
-# Based on: http://www.alundgren.se/2013/11/18/iso-to-mkv-in-linux/
+# Based on: http://aperiodic.net/phil/archives/Geekery/lossless-dvd-to-mkv.html
 
 # Bash base variables:
 
@@ -40,50 +40,27 @@ OUTPUT_PATH="/Users/rolle/Projects/dvdrip/output"
 #OUTPUT_PATH="/Users/rolle/Projects/dvdrip/output/"
 #MOVIE_TITLE="Movie title here"
 
-echo "${boldgreen}Now, to getting some information about the media...${txtreset}"
-mplayer -dvd-device $DVD_PATH dvd://1 -vo null -ao null
+echo "${boldgreen}Ripping out main title track...${txtreset}"
+tccat -i $DVD_PATH -t dvd -T ${TRACK},-1 > $DUMP_PATH/movie.vob
 
-echo "${boldgreen}Also getting the length of the titles...${txtreset}"
-mplayer -dvd-device $DVD_PATH dvd://1 -identify -frames 0 -vo null -ao null
-
-echo "${boldgreen}Finding the track you want to rip and running it through mplayer and generating raw .vob file...${txtreset}"
-mplayer -dvd-device $DVD_PATH dvd://$TRACK -dumpstream -dumpfile $DUMP_PATH/movie.vob
-
-echo "${boldgreen}Copying the IFO file for the track...${txtreset}"
-cp $DVD_PATH/VIDEO_TS/VTS_0${TRACK}_0.IFO $DUMP_PATH/
-
-echo "${boldgreen}Getting the chapter list...${txtreset}"
+echo "${boldgreen}Getting the title chapters...${txtreset}"
 dvdxchap -t $TRACK $DVD_PATH > $DUMP_PATH/chapters.txt
 
-echo "${boldgreen}Getting all the subtitles...${txtreset}"
-tccat -i $DUMP_PATH/movie.vob | tcextract -x ps1 -t vob -a 0x20 > $DUMP_PATH/subs-0
-tccat -i $DUMP_PATH/movie.vob | tcextract -x ps1 -t vob -a 0x21 > $DUMP_PATH/subs-1
-tccat -i $DUMP_PATH/movie.vob | tcextract -x ps1 -t vob -a 0x22 > $DUMP_PATH/subs-2
-tccat -i $DUMP_PATH/movie.vob | tcextract -x ps1 -t vob -a 0x23 > $DUMP_PATH/subs-3
-tccat -i $DUMP_PATH/movie.vob | tcextract -x ps1 -t vob -a 0x24 > $DUMP_PATH/subs-4
-subtitle2vobsub -o $DUMP_PATH/vobsubs -i $DUMP_PATH/VTS_0${TRACK}_0.IFO -a 0 < $DUMP_PATH/subs-0
-subtitle2vobsub -o $DUMP_PATH/vobsubs -i $DUMP_PATH/VTS_0${TRACK}_0.IFO -a 1 < $DUMP_PATH/subs-1
-subtitle2vobsub -o $DUMP_PATH/vobsubs -i $DUMP_PATH/VTS_0${TRACK}_0.IFO -a 2 < $DUMP_PATH/subs-2
-subtitle2vobsub -o $DUMP_PATH/vobsubs -i $DUMP_PATH/VTS_0${TRACK}_0.IFO -a 3 < $DUMP_PATH/subs-3
-subtitle2vobsub -o $DUMP_PATH/vobsubs -i $DUMP_PATH/VTS_0${TRACK}_0.IFO -a 4 < $DUMP_PATH/subs-4
+echo "${boldgreen}Checking the track for stream match...${txtreset}"
+mplayer -dvd-device $DVD_PATH -vo null -ao null -frames 0 -v dvd://${TRACK} 2>&1 | egrep '[as]id' > $DUMP_PATH/${TRACK}.streams
 
-echo "${boldgreen}Now, ripping the audio using the AID we got from mplayer earlier...${txtreset}"
-mplayer $DUMP_PATH/movie.vob -aid 128 -dumpaudio -dumpfile $DUMP_PATH/audio128.ac3
+echo "${boldgreen}Pulling out individual components, video first...${txtreset}"
+tcextract -i $DUMP_PATH/movie.vob -t vob -x mpeg2 > $DUMP_PATH/${TRACK}.video.m2v
 
-echo "${boldgreen}Determining cropping parameters...${txtreset}"
-mplayer $DUMP_PATH/movie.vob -vf cropdetect -sb 50000000 -vo null -ao null
+echo "${boldgreen}Getting audio tracks...${txtreset}"
+tcextract -i $DUMP_PATH/movie.vob -t vob -x ac3 -a 0,1,2,3,4,5,6,7,8,9 > $DUMP_PATH/audio.ac3
 
-echo "${boldgreen}Recording detected cropping parameters...${txtreset}"
-./bitrate.py -o 0.5 -t 1400 1:42:04 $DUMP_PATH/audio128.ac3 $DUMP_PATH/vobsubs.idx $DUMP_PATH/vobsubs.sub
-
-echo "${boldgreen}Now encoding in two passes...${txtreset}"
-echo "${boldgreen}Encoding pass 1...${txtreset}"
-mencoder $DUMP_PATH/movie.vob -vf pullup,softskip,crop=704:480:10:48,harddup -oac copy -ovc x264 -x264encopts bitrate=1690:subq=5:bframes=3:weight_b:threads=auto:pass=1 -ofps 25 -o /dev/null
-
-echo "${boldgreen}Encoding pass 2...${txtreset}"
-mencoder $DUMP_PATH/movie.vob -vf pullup,softskip,crop=704:480:10:48,harddup -oac copy -ovc x264 -x264encopts bitrate=1690:subq=5:8x8dct:frameref=2:bframes=3:weight_b:threads=auto:pass=2 -o $DUMP_PATH/movie.264
+echo "${boldgreen}Getting subtitles...${txtreset}"
+tcextract -i $DUMP_PATH/movie.vob -t vob -x ps1 -a 0x20,0x21,0x22,0x23,0x24 > $DUMP_PATH/subs.raw
+subtitle2vobsub -p $DUMP_PATH/subs.raw -i $DVD_PATH/VIDEO_TS/VTS_0${TRACK}_0.IFO -o $DUMP_PATH/subs
 
 echo "${boldgreen}Finally merging everything together as one mkv file...${txtreset}"
-mkvmerge --title $MOVIE_TITLE -o "$OUTPUT_PATH/$MOVIE_TITLE.mkv" --chapters $DUMP_PATH/chapters.txt --default-duration 0:25fps -A $DUMP_PATH/movie.264 $DUMP_PATH/audio128.ac3 $DUMP_PATH/vobsubs.idx
+
+mkvmerge -o "$MOVIE_TITLE.mkv" --title "$MOVIE_TITLE" --chapters $DUMP_PATH/chapters.txt $DUMP_PATH/${TRACK}.video.m2v $DUMP_PATH/audio.ac3 $DUMP_PATH/subs
 
 echo "${boldgreen}Done! :) Movie ready in $OUTPUT_PATH/$MOVIE_TITLE.mkv${txtreset}"
