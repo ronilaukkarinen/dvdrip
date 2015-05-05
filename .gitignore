@@ -1,0 +1,7 @@
+*.log
+*.mbtree
+dumpfiles/*
+output/*
+*.idx
+*.sub
+*.x264
