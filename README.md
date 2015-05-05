@@ -14,12 +14,16 @@ Tested with Mac OS X Yosemite (10.10.3).
 - mencoder with xvid support (usually included with mplayer-devel)
 - ogmtools (for dvdxchap)
 - mkvtoolnix (for mkvmerge)
+- transcode (for subtitle2vobsub)
+- tccat (smallshrink for Mac OS X)
 
 #### Mac OS X
 
 You can install most of these with [MacPorts](http://www.macports.org) and the rest with [Homebrew](http://brew.sh).
 
 To get mencoder to work properly, use `sudo port install mplayer-devel && sudo port upgrade --enforce-variants mplayer-devel +mencoder_extras`
+
+For `tccat` you will need [smallshrink](https://code.google.com/p/smallshrink/) and to symlink tccat with `ln -s /Applications/SmallShrink.app/Contents/Resources/tccat /usr/local/bin/tccat` and make it executable by `sudo chmod +x /usr/local/bin/tccat`.
 
 #### Linux
 
